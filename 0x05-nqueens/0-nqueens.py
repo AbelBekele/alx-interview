@@ -1,57 +1,44 @@
 #!/usr/bin/python3
-
+""" N queens """
 import sys
 
 
-def solve(row, column):
-    solver = [[]]
-    for q in range(row):
-        solver = place_queen(q, column, solver)
-    return solver
+if len(sys.argv) > 2 or len(sys.argv) < 2:
+    print("Usage: nqueens N")
+    exit(1)
+
+if not sys.argv[1].isdigit():
+    print("N must be a number")
+    exit(1)
+
+if int(sys.argv[1]) < 4:
+    print("N must be at least 4")
+    exit(1)
+
+n = int(sys.argv[1])
 
 
-def place_queen(q, column, prev_solver):
-    solver_queen = []
-    for array in prev_solver:
-        for x in range(column):
-            if is_safe(q, x, array):
-                solver_queen.append(array + [x])
-    return solver_queen
-
-
-def is_safe(q, x, array):
-    if x in array:
-        return (False)
+def queens(n, i=0, a=[], b=[], c=[]):
+    """ find possible positions """
+    if i < n:
+        for j in range(n):
+            if j not in a and i + j not in b and i - j not in c:
+                yield from queens(n, i + 1, a + [j], b + [i + j], c + [i - j])
     else:
-        return all(abs(array[column] - x) != q - column
-                   for column in range(q))
+        yield a
 
 
-def init():
-    if len(sys.argv) != 2:
-        print("Usage: nqueens N")
-        sys.exit(1)
-    if sys.argv[1].isdigit():
-        the_queen = int(sys.argv[1])
-    else:
-        print("N must be a number")
-        sys.exit(1)
-    if the_queen < 4:
-        print("N must be at least 4")
-        sys.exit(1)
-    return(the_queen)
+def solve(n):
+    """ solve """
+    k = []
+    i = 0
+    for solution in queens(n, 0):
+        for s in solution:
+            k.append([i, s])
+            i += 1
+        print(k)
+        k = []
+        i = 0
 
 
-def n_queens():
-
-    the_queen = init()
-    solver = solve(the_queen, the_queen)
-    for array in solver:
-        clean = []
-        for q, x in enumerate(array):
-            clean.append([q, x])
-        print(clean)
-
-
-if __name__ == '__main__':
-    n_queens()
+solve(n)

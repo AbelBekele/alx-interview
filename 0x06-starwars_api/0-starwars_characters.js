@@ -9,7 +9,7 @@ const filmId = process.argv[2];
 if (!filmId || isNaN(filmId)) {
   process.exit(1);
 }
-const url = `https://swapi-api.hbtn.io/api/films/${filmId}`;
+const url = `https://swapi-api.alx-tools.com/api/films/${filmId}`;
 
 request(url, (error, response, body) => {
   if (error) {

@@ -1,54 +1,29 @@
 #!/usr/bin/python3
+"""Program that performs prime game"""
+
 
 def isWinner(x, nums):
-    Maria = 0
-    Ben = 0
-    if (x < 1 or x != len(nums)):
+    """Function that performs prime game"""
+    if not nums or x < 1:
         return None
+    n = max(nums)
+    fltr = [True for _ in range(max(n + 1, 2))]
+    for i in range(2, int(pow(n, 0.5)) + 1):
+        if not fltr[i]:
+            continue
+        for j in range(i * i, n + 1, i):
+            fltr[j] = False
+    fltr[0] = fltr[1] = False
+    c = 0
+    for i in range(len(fltr)):
+        if fltr[i]:
+            c += 1
+        fltr[i] = c
+    plyr1 = 0
     for n in nums:
-        winner = primeGame(n)
-        if winner == 1:
-            Maria += 1
-        elif winner == 2:
-            Ben += 1
-    if Maria == Ben:
+        plyr1 += fltr[n] % 2 == 1
+    if plyr1 * 2 == len(nums):
         return None
-    elif Maria > Ben:
+    if plyr1 * 2 > len(nums):
         return "Maria"
     return "Ben"
-
-def primeGame(n):
-    if (n < 1):
-        return None
-    if (n == 1):
-        return (2)
-    numbers = list(range(n + 1))
-    player = 1
-    prime = 2
-    primes_used = []
-    for num in numbers:
-        if (num % prime == 0):
-            numbers.remove(num)
-    primes_used.append(prime)
-    prime = 3
-    while (numbers != [1]):
-        if (player == 1):
-            player = 2
-        else:
-            player = 1
-        for num in numbers:
-            if (num % prime == 0):
-                numbers.remove(num)
-        primes_used.append(prime)
-        prime += 2
-        flag = 1
-        while (flag):
-            for num in primes_used:
-                if (prime % num == 0):
-                    prime += 2
-                    break
-            else:
-                flag = 0
-    if (player == 1):
-        return 1
-    return 2

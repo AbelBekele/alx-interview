@@ -1,31 +1,54 @@
 #!/usr/bin/python3
-""" Module for Prime Game """
-
 
 def isWinner(x, nums):
-    """Solves Prime Game"""
-    if not nums or x < 1:
+    Maria = 0
+    Ben = 0
+    if (x < 1 or x != len(nums)):
         return None
-    n = max(nums)
-    sieve = [True for _ in range(max(n + 1, 2))]
-    for i in range(2, int(pow(n, 0.5)) + 1):
-        if not sieve[i]:
-            continue
-        for j in range(i*i, n + 1, i):
-            sieve[j] = False
-
-    sieve[0] = sieve[1] = False
-    c = 0
-    for i in range(len(sieve)):
-        if sieve[i]:
-            c += 1
-        sieve[i] = c
-
-    player1 = 0
     for n in nums:
-        player1 += sieve[n] % 2 == 1
-    if player1 * 2 == len(nums):
+        winner = primeGame(n)
+        if winner == 1:
+            Maria += 1
+        elif winner == 2:
+            Ben += 1
+    if Maria == Ben:
         return None
-    if player1 * 2 > len(nums):
+    elif Maria > Ben:
         return "Maria"
     return "Ben"
+
+def primeGame(n):
+    if (n < 1):
+        return None
+    if (n == 1):
+        return (2)
+    numbers = list(range(n + 1))
+    player = 1
+    prime = 2
+    primes_used = []
+    for num in numbers:
+        if (num % prime == 0):
+            numbers.remove(num)
+    primes_used.append(prime)
+    prime = 3
+    while (numbers != [1]):
+        if (player == 1):
+            player = 2
+        else:
+            player = 1
+        for num in numbers:
+            if (num % prime == 0):
+                numbers.remove(num)
+        primes_used.append(prime)
+        prime += 2
+        flag = 1
+        while (flag):
+            for num in primes_used:
+                if (prime % num == 0):
+                    prime += 2
+                    break
+            else:
+                flag = 0
+    if (player == 1):
+        return 1
+    return 2
